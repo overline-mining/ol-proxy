@@ -83,8 +83,9 @@ def main():
     # Connect to Stratum pool, main monitoring connection
     log.warning("Trying to connect to Stratum pool at %s:%d" % (settings.POOL_HOST, settings.POOL_PORT))
     f = SocketTransportClientFactory(settings.POOL_HOST, settings.POOL_PORT,
-                debug=settings.DEBUG, proxy=None,
-                event_handler=client_service.ClientMiningService)
+                                     debug=settings.DEBUG, proxy=None,
+                                     event_handler=client_service.ClientMiningService,
+                                     ssl=settings.POOL_SSL)
 
     f1 = None
     f2 = None

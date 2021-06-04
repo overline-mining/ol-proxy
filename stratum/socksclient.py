@@ -4,7 +4,7 @@
 import socket
 import struct
 from zope.interface import implements
-from twisted.internet import defer
+from twisted.internet import defer, ssl
 from twisted.internet.interfaces import IStreamClientEndpoint
 from twisted.internet.protocol import Protocol, ClientFactory
 from twisted.internet.endpoints import _WrappingFactory
@@ -80,11 +80,12 @@ class SOCKSWrapper(object):
     implements(IStreamClientEndpoint)
     factory = SOCKSv4ClientFactory
 
-    def __init__(self, reactor, host, port, endpoint):
+    def __init__(self, reactor, host, port, endpoint, ssl=False):
         self._host = host
         self._port = port
         self._reactor = reactor
         self._endpoint = endpoint
+        self._ssl = ssl
 
     def connect(self, protocolFactory):
         """
@@ -100,7 +101,10 @@ class SOCKSWrapper(object):
             f.postHandshakeFactory = protocolFactory
             f.handshakeDone = defer.Deferred()
             wf = _WrappingFactory(f)
-            self._reactor.connectTCP(self._host, self._port, wf)
+            if self._ssl:
+                self._reactor.connectTCP(self._host, self._port, wf, ssl.ClientContextFactory())
+            else:
+                self._reactor.connectTCP(self._host, self._port, wf)
             return f.handshakeDone
         except: 
             return defer.fail() 

@@ -1,6 +1,6 @@
 from twisted.internet.protocol import ServerFactory
 from twisted.internet.protocol import ReconnectingClientFactory
-from twisted.internet import reactor, defer, endpoints
+from twisted.internet import reactor, defer, endpoints, ssl
 
 import socksclient
 import custom_exceptions
@@ -10,9 +10,10 @@ from event_handler import GenericEventHandler
 import logger
 log = logger.get_logger('socket_transport')
 
-def sockswrapper(proxy, dest):
+def sockswrapper(proxy, dest, ssl=False):
     endpoint = endpoints.TCP4ClientEndpoint(reactor, dest[0], dest[1])
-    return socksclient.SOCKSWrapper(reactor, proxy[0], proxy[1], endpoint)
+    print "Connecting:", dest
+    return socksclient.SOCKSWrapper(reactor, proxy[0], proxy[1], endpoint, ssl=ssl)
   
 class SocketTransportFactory(ServerFactory):
     def __init__(self, debug=False, signing_key=None, signing_id=None, event_handler=GenericEventHandler,
@@ -30,7 +31,8 @@ class SocketTransportClientFactory(ReconnectingClientFactory):
     def __init__(self, host, port, allow_trusted=True, allow_untrusted=False,
                  debug=False, signing_key=None, signing_id=None,
                  is_reconnecting=True, proxy=None,
-                 event_handler=GenericEventHandler):
+                 event_handler=GenericEventHandler,
+                 ssl=False):
         self.debug = debug
         self.maxDelay = 60
         self.is_reconnecting = is_reconnecting
@@ -47,6 +49,7 @@ class SocketTransportClientFactory(ReconnectingClientFactory):
         self.is_failover = False
         self.is_connected = False
         self.remote_ip = None
+        self.ssl = ssl
         
         self.event_handler = event_handler
         self.protocol = ClientProtocol
@@ -57,11 +60,14 @@ class SocketTransportClientFactory(ReconnectingClientFactory):
     def connect(self):
         if self.proxy:
             self.timeout_handler = reactor.callLater(60, self.connection_timeout)
-            sw = sockswrapper(self.proxy, self.main_host)
+            sw = sockswrapper(self.proxy, self.main_host, ssl)
             sw.connect(self)
         else:
             self.timeout_handler = reactor.callLater(30, self.connection_timeout)
-            reactor.connectTCP(self.main_host[0], self.main_host[1], self)
+            if self.ssl:
+                reactor.connectSSL(self.main_host[0], self.main_host[1], self, ssl.ClientContextFactory())
+            else:
+                reactor.connectTCP(self.main_host[0], self.main_host[1], self)
             
     '''
     This shouldn't be a part of transport layer
