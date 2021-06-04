@@ -1,7 +1,7 @@
 #Description
 
 This is Stratum Proxy for Ethereum based pools (RPCv2) using asynchronous networking written in Python Twisted.
-Originally developed for DwarfPool http://dwarfpool.com/eth
+Originally developed for waietng-pool http://www.waietng-pool.us
 
 **NOTE:** This fork is still in development. Some features may be broken. Please report any broken features or issues.
 
@@ -9,7 +9,7 @@ Originally developed for DwarfPool http://dwarfpool.com/eth
 #Features
 
 * Additional up to 20% increase of earning compared to standard pools
-* ETH stratum proxy
+* Overline stratum and secure stratum proxy to http clients
 * Automatically failover via proxy
 * Only one connection to the pool
 * Workers get new jobs immediately
@@ -44,7 +44,7 @@ Originally developed for DwarfPool http://dwarfpool.com/eth
 
 #Command line to miner start, recommended farm-recheck to use with stratum-proxy is 200
 
-* ./ethminer --farm-recheck 200 -G -F http://127.0.0.1:8080/rig1
+* ./olminer --farm-recheck 200 --cuda -P http://127.0.0.1:8080/rig1
 
 
 #External script to restart proxy (made by rain)
@@ -119,7 +119,7 @@ http://sourceforge.net/projects/pywin32/files/pywin32/
 
 #Contact
 
-* I am available via admin@dwarfpool.com
+* I am available via telegram and discord @meanphysicist
 
 #Credits
 
