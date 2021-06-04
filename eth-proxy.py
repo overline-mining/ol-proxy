@@ -93,20 +93,23 @@ def main():
     if settings.POOL_FAILOVER_ENABLE:
         log.warning("Trying to connect to failover Stratum pool-1 at %s:%d" % (settings.POOL_HOST_FAILOVER1, settings.POOL_PORT_FAILOVER1))
         f1 = SocketTransportClientFactory(settings.POOL_HOST_FAILOVER1, settings.POOL_PORT_FAILOVER1,
-                debug=settings.DEBUG, proxy=None,
-                event_handler=client_service.ClientMiningService)
+                                          debug=settings.DEBUG, proxy=None,
+                                          event_handler=client_service.ClientMiningService,
+                                          ssl=settings.POOL_SSL_FAILOVER1)
         f1.is_failover = True
 
         log.warning("Trying to connect to failover Stratum pool-2 at %s:%d" % (settings.POOL_HOST_FAILOVER2, settings.POOL_PORT_FAILOVER2))
         f2 = SocketTransportClientFactory(settings.POOL_HOST_FAILOVER2, settings.POOL_PORT_FAILOVER2,
-                debug=settings.DEBUG, proxy=None,
-                event_handler=client_service.ClientMiningService)
+                                          debug=settings.DEBUG, proxy=None,
+                                          event_handler=client_service.ClientMiningService,
+                                          ssl=settings.POOL_SSL_FAILOVER2)
         f2.is_failover = True
 
         log.warning("Trying to connect to failover Stratum pool-3 at %s:%d" % (settings.POOL_HOST_FAILOVER3, settings.POOL_PORT_FAILOVER3))
         f3 = SocketTransportClientFactory(settings.POOL_HOST_FAILOVER3, settings.POOL_PORT_FAILOVER3,
-                debug=settings.DEBUG, proxy=None,
-                event_handler=client_service.ClientMiningService)
+                                          debug=settings.DEBUG, proxy=None,
+                                          event_handler=client_service.ClientMiningService,
+                                          ssl=settings.POOL_SSL_FAILOVER3)
         f3.is_failover = True
 
     job_registry = jobs.JobRegistry(f,f1,f2,f3)
