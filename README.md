@@ -1,7 +1,7 @@
 #Description
 
-This is Stratum Proxy for Ethereum based pools (RPCv2) using asynchronous networking written in Python Twisted.
-Originally developed for waietng-pool http://www.waietng-pool.us
+This is Stratum Proxy for Overline-proxy based pools (RPCv2) using asynchronous networking written in Python Twisted.
+Originally developed for waietng-pool http://www.waietng-pool.us, and before that for open-ethereum-pool.
 
 **NOTE:** This fork is still in development. Some features may be broken. Please report any broken features or issues.
 
